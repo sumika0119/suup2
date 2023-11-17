@@ -9,9 +9,18 @@
   <body>
   <form method="POST"> {#送信ボタンの追加(CSRFトークンの設定がないと送信できない)#}
    {% csrf_token %}
-    <table>
-       {{form.as_table}} {#縦に表示#}
-    </table>
+   {{ form.name.label}} : {{ form.name }}
+   {% if form.name.errors %}
+       <div style="color:red;">{{ form.name.errors.as_text }}</div>
+   {% endif %}
+   {{ form.title.label}} : {{ form.title }}
+   {% if form.title.errors %}
+       <div style="color:red;">{{ form.name.errors.as_text }}</div>
+   {% endif %}
+   {{ form.memo.label}} : {{ form.memo }}
+   {% if form.memo.errors %}
+       <div style="color:red;">{{ form.name.errors.as_text }}</div>
+   {% endif %}
     <input type="submit" value="送信">
   </form>
   </body>

@@ -6,13 +6,17 @@
     {% load static %} {#静的ファイルを読み込む#}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="icon" href="{% static 'img/favicon.ico' %}">
+  print("form: ", form)
+  print("dir(form): ", dir(form))
   </head>
   <body>
   <form method="POST"> {#送信ボタンの追加(CSRFトークンの設定がないと送信できない)#}
    {% csrf_token %}
-    <table>
+  print("form: ", form)
+  print("dir(form): ", dir(form))
+  <table>
        {{form.as_table}} {#縦に表示#}
-    </table>
+  </table>
     <input type="submit" value="送信">
   </form>
   </body>

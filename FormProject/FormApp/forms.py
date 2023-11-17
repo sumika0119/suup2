@@ -44,7 +44,8 @@ class UserInfo(forms.Form):
         homepage = self.cleaned_data['homepage']
         if not homepage.startswith('https'):
             raise forms.ValidationError('ホームページのURLはhttpsのみ')
-        
+
+
     def clean(self):
         cleaned_data = super().clean()
         mail = cleaned_data['mail']
@@ -52,9 +53,35 @@ class UserInfo(forms.Form):
         if mail != verify_mail:
             raise forms.ValidationError('メールアドレスが一致しません')
 
+
+class BaseForm(forms.ModelForm):
+    def save(self, *args, **kwargs):
+        print(f'Form: {self.__class__.__name__}実行')
+        return super(BaseForm, self).save(*args, **kwargs)
+
+
 class PostModelForm(forms.ModelForm):
-    
+    name = forms.CharField(label='名前')
+    title = forms.CharField(label='タイトル')
+    memo = forms.CharField(
+        label='メモ', widget=forms.Textarea(attrs={'rows': 30, 'cols': 20})
+    )    # テキストエリア　改行もできるように
     class Meta:
         model = Post
-        # fields = '__all__' # 画面上にどのfieldを表示するのか（全field）
-        fields = ['name', 'title']
+        fields = '__all__' # 画面上にどのfieldを表示するのか（全field）
+        # fields = ['name', 'title']
+        # exclude = ['title']
+
+    def save(self, *args, **kwargs):
+        obj = super(PostModelForm, self).save(commit=False, *args, **kwargs)
+        obj.name = obj.name.upper()
+        print(type(obj))
+        print('save実行')
+        obj.save()
+        return obj
+    
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if name == 'ああああ':
+            raise ValidationError('名前が登録できません')
+        return name
