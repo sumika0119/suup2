@@ -1,0 +1,30 @@
+import traceback
+import requests
+
+def catch_response():
+    urls = [
+        'httpss://google.com',
+        'google.com',
+        'https://google.coms',
+        'https://google.com'
+    ]
+    exceptions= [] # exceptionsを配列に格納→19行目raiseでexceptionグループとして発生させてそれを外部（21行目以降）からキャッチする
+    for url in urls:
+        try:
+            r = requests.get(url) # html（サイト）の内容を取得
+        except Exception as e:
+            e.add_note(f'url: {url}') #例外（間違えたURL）が発生した場合はノートにURLを追加してexceptionsという配列にエラー内容を追加していく。
+            exceptions.append(e)
+    if len(exceptions) > 0:
+        raise ExceptionGroup('例外発生: ', exceptions)
+    
+try:    
+    catch_response()
+except *requests.exceptions.ConnectionError as ce:
+    print('Connecton Error')
+except *requests.exceptions.MissingSchema as ms:
+    print('Miising Schema')
+except *requests.exceptions.InvalidSchema as i:
+    print('Invalid Schema')
+except *Exception as e:
+    traceback.print_exception(e)
